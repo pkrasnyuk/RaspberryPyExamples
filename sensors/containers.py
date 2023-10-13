@@ -4,6 +4,7 @@ import os
 from dependency_injector import containers, providers
 
 from sensors.helpers.app_handlers import AppHandlers
+from sensors.services.simple_sensors_service import SimpleSensorsService
 
 
 class Container(containers.DeclarativeContainer):
@@ -15,3 +16,5 @@ class Container(containers.DeclarativeContainer):
     handlers = providers.Singleton(
         AppHandlers,
     )
+
+    simple_sensors_service = providers.Factory(SimpleSensorsService)

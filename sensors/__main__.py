@@ -2,7 +2,7 @@ import logging
 
 from sensors.containers import Container
 from sensors.helpers.app_handlers import AppHandlers
-from sensors.helpers.simple_helpers import get_humidity_and_temperature
+from sensors.services.sensors_service_interface import SensorsServiceInterface
 
 log = logging.getLogger(f"{__name__}")
 
@@ -10,10 +10,9 @@ log = logging.getLogger(f"{__name__}")
 DHT_PIN = 19
 
 
-def main(handlers: AppHandlers):
+def main(handlers: AppHandlers, sensors_service_interface: SensorsServiceInterface):
     handlers.init_global_handler()
-
-    get_humidity_and_temperature(sersor_pin=DHT_PIN)
+    sensors_service_interface.get_humidity_and_temperature(sersor_pin=DHT_PIN)
 
 
 if __name__ == "__main__":
@@ -21,4 +20,4 @@ if __name__ == "__main__":
     container.init_resources()
     container.wire(modules=[__name__])
 
-    main(handlers=container.handlers())
+    main(handlers=container.handlers(), sensors_service_interface=container.simple_sensors_service())
