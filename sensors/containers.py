@@ -13,8 +13,6 @@ class Container(containers.DeclarativeContainer):
 
     logging = providers.Resource(logging.config.dictConfig, config=config.log())
 
-    handlers = providers.Singleton(
-        AppHandlers,
-    )
+    handlers = providers.Singleton(AppHandlers)
 
     simple_sensors_service = providers.Factory(SimpleSensorsService)
