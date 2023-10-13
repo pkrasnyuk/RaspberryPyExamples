@@ -1,6 +1,5 @@
 import Adafruit_DHT
 
-
 DHT_SENSOR = Adafruit_DHT.DHT11
 
 

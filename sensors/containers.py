@@ -1,8 +1,10 @@
-import os
 import logging.config
+import os
+
 from dependency_injector import containers, providers
 
 from sensors.helpers.app_handlers import AppHandlers
+
 
 class Container(containers.DeclarativeContainer):
     config = providers.Configuration()
