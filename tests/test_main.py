@@ -23,5 +23,5 @@ class TestMain(TestCase):
         WHEN: execute main method
         THEN: expected result returned
         """
-        with patch.object(SimpleSensorsService, "get_humidity_and_temperature", return_value=None):
+        with patch.object(SimpleSensorsService, "set_humidity_and_temperature_as_lcd_messages", return_value=None):
             main(handlers=AppHandlers(), sensors_service_interface=SimpleSensorsService())

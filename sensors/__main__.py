@@ -12,7 +12,7 @@ DHT_PIN = 19
 
 def main(handlers: AppHandlers, sensors_service_interface: SensorsServiceInterface):
     handlers.init_global_handler()
-    sensors_service_interface.get_humidity_and_temperature(sersor_pin=DHT_PIN)
+    sensors_service_interface.set_humidity_and_temperature_as_lcd_messages(sersor_pin=DHT_PIN)
 
 
 if __name__ == "__main__":
