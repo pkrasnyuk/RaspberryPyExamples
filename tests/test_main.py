@@ -1,10 +1,11 @@
-from typing import Any
 from unittest import TestCase
 from unittest.mock import patch
 
 from sensors.__main__ import main
+from sensors.data_processing.wheather_data_processing import WheatherDataProcessing
 from sensors.helpers.app_handlers import AppHandlers
-from sensors.services.simple_sensors_service import SimpleSensorsService
+from sensors.services.dht_sensor_service import DHTSensorService
+from sensors.services.lcd_service import LCDService
 
 
 class TestMain(TestCase):
@@ -15,7 +16,7 @@ class TestMain(TestCase):
         WHEN: check main method signature
         THEN: expected signature returned
         """
-        self.assertIsNone(main(handlers=Any, sensors_service_interface=Any))
+        self.assertIsNone(main())
 
     def test_main_2(self):
         """
@@ -23,5 +24,5 @@ class TestMain(TestCase):
         WHEN: execute main method
         THEN: expected result returned
         """
-        with patch.object(SimpleSensorsService, "set_humidity_and_temperature_as_lcd_messages", return_value=None):
-            main(handlers=AppHandlers(), sensors_service_interface=SimpleSensorsService())
+        with patch.object(WheatherDataProcessing, "processing", return_value=None):
+            main(handlers=AppHandlers(), lcd_service=LCDService(), dht_sensor_service=DHTSensorService())

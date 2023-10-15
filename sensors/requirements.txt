@@ -1,3 +1,4 @@
 Adafruit_DHT
 dependency-injector
+rpi_lcd
 pydantic
