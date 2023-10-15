@@ -1,5 +1,6 @@
 from abc import abstractmethod
 from typing import Optional
+
 from sensors.dto.dto_entity import DtoEntity
 from sensors.services.base_service import BaseService
 
