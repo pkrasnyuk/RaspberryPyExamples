@@ -1,11 +1,12 @@
 import logging
 from typing import Optional
-from sensors.dto.dto_accelerometry import DtoAccelerometry
-from sensors.services.base_sensor_service import BaseSensorService
 
+import adafruit_adxl34x
 import board
 import busio
-import adafruit_adxl34x
+
+from sensors.dto.dto_accelerometry import DtoAccelerometry
+from sensors.services.base_sensor_service import BaseSensorService
 
 
 class AccelerometerSensorService(BaseSensorService):
@@ -56,7 +57,7 @@ class AccelerometerSensorService(BaseSensorService):
                 z_offset=z_offset,
                 dropped=dropped,
                 tapped=tapped,
-                motion_detected=motion_detected
+                motion_detected=motion_detected,
             )
         else:
             self.__logger.warning(msg="Failed to retrieve data from accelerometer sensor")

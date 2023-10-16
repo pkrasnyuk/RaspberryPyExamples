@@ -15,17 +15,17 @@ class AccelerometerDataProcessing(BaseDataProcessing):
             while True:
                 accelerometry_data: Optional[DtoAccelerometry] = self.__accelerometer_sensor_service.get_sensor_data()
                 if accelerometry_data is not None:
-                    print(f"Acceleration:")
+                    print("Acceleration:")
                     print(f"    X: {accelerometry_data.x_acceleration:.3f} m/s^2")
                     print(f"    Y: {accelerometry_data.y_acceleration:.3f} m/s^2")
                     print(f"    Z: {accelerometry_data.z_acceleration:.3f} m/s^2")
 
-                    print(f"Raw:")
+                    print("Raw:")
                     print(f"    X: {accelerometry_data.x_raw:.3f}")
                     print(f"    Y: {accelerometry_data.y_raw:.3f}")
                     print(f"    Z: {accelerometry_data.z_raw:.3f}")
 
-                    print(f"Calibrated offsets:")
+                    print("Calibrated offsets:")
                     print(f"    X: {accelerometry_data.x_offset:.3f}")
                     print(f"    Y: {accelerometry_data.y_offset:.3f}")
                     print(f"    Z: {accelerometry_data.z_offset:.3f}")

@@ -1,6 +1,7 @@
 from typing import Optional
 
 from pydantic import Field
+
 from sensors.dto.dto_entity import DtoEntity
 
 
@@ -16,7 +17,7 @@ class DtoAccelerometry(DtoEntity):
     x_offset: Optional[float] = Field(default=None)
     y_offset: Optional[float] = Field(default=None)
     z_offset: Optional[float] = Field(default=None)
-    
+
     dropped: Optional[bool] = Field(default=None)
     tapped: Optional[bool] = Field(default=None)
     motion_detected: Optional[bool] = Field(default=None)
