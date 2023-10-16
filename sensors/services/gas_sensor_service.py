@@ -1,9 +1,10 @@
 import logging
 from typing import Optional
-from sensors.dto.dto_gas import DtoGas
-from sensors.services.base_sensor_service import BaseSensorService
 
 from gas_detection import GasDetection
+
+from sensors.dto.dto_gas import DtoGas
+from sensors.services.base_sensor_service import BaseSensorService
 
 
 class GazSensorService(BaseSensorService):

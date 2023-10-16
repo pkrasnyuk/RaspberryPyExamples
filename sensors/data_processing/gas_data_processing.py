@@ -1,5 +1,6 @@
 import time
 from typing import Optional
+
 from sensors.data_processing.base_data_processing import BaseDataProcessing
 from sensors.dto.dto_gas import DtoGas
 from sensors.dto.dto_lcd_messages import DtoLcdMessages
@@ -27,9 +28,10 @@ class GazDataProcessing(BaseDataProcessing):
                     if gas_detection_value.h2 is not None:
                         h2_value: float = gas_detection_value.h2 * 100.0
                         second_line_message = f"H2: {h2_value:0.2f}%"
-                    self.__lcd_service.send_messages(messages=DtoLcdMessages(
-                        first_line_message=first_line_message,
-                        second_line_message=second_line_message,
+                    self.__lcd_service.send_messages(
+                        messages=DtoLcdMessages(
+                            first_line_message=first_line_message,
+                            second_line_message=second_line_message,
                         )
                     )
                     time.sleep(10)
@@ -39,9 +41,10 @@ class GazDataProcessing(BaseDataProcessing):
                     if gas_detection_value.lpg is not None:
                         lpg_value: float = gas_detection_value.lpg * 100.0
                         second_line_message = f"LPG: {lpg_value:0.2f}%"
-                    self.__lcd_service.send_messages(messages=DtoLcdMessages(
-                        first_line_message=first_line_message,
-                        second_line_message=second_line_message,
+                    self.__lcd_service.send_messages(
+                        messages=DtoLcdMessages(
+                            first_line_message=first_line_message,
+                            second_line_message=second_line_message,
                         )
                     )
                     time.sleep(10)
@@ -51,9 +54,10 @@ class GazDataProcessing(BaseDataProcessing):
                     if gas_detection_value.alcohol is not None:
                         alcohol_value: float = gas_detection_value.alcohol * 100.0
                         second_line_message = f"Alcohol: {alcohol_value:0.2f}%"
-                    self.__lcd_service.send_messages(messages=DtoLcdMessages(
-                        first_line_message=first_line_message,
-                        second_line_message=second_line_message,
+                    self.__lcd_service.send_messages(
+                        messages=DtoLcdMessages(
+                            first_line_message=first_line_message,
+                            second_line_message=second_line_message,
                         )
                     )
                     time.sleep(10)
@@ -61,9 +65,10 @@ class GazDataProcessing(BaseDataProcessing):
                         smoke_value: float = gas_detection_value.smoke * 100.0
                         first_line_message = f"Smoke: {smoke_value:0.2f}%"
                     second_line_message = ""
-                    self.__lcd_service.send_messages(messages=DtoLcdMessages(
-                        first_line_message=first_line_message,
-                        second_line_message=second_line_message,
+                    self.__lcd_service.send_messages(
+                        messages=DtoLcdMessages(
+                            first_line_message=first_line_message,
+                            second_line_message=second_line_message,
                         )
                     )
                     time.sleep(10)
