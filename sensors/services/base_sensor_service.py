@@ -6,7 +6,7 @@ from sensors.services.base_service import BaseService
 
 
 class BaseSensorService(BaseService):
-    def set_sersor_pin(self, pin: Optional[int] = None) -> None:
+    def __init__(self, pin: Optional[int] = None):
         self._sensor_pin = pin
 
     @abstractmethod

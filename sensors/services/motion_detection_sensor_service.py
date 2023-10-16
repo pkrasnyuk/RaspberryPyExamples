@@ -9,20 +9,23 @@ from sensors.services.base_sensor_service import BaseSensorService
 
 
 class MotionDetectionSensorService(BaseSensorService):
-    def __init__(self):
+    def __init__(self, pin: Optional[int] = None):
+        super().__init__(pin=pin)
         self.__logger = logging.getLogger(f"{__name__}.{self.__class__.__name__}")
-
-    def get_sensor_data(self) -> Optional[DtoMotion]:
         if self._sensor_pin is not None and self._sensor_pin > 0:
-            motion_sensor = digitalio.DigitalInOut(pin=self.__get_pin(value=self._sensor_pin))
-            if motion_sensor is not None:
-                motion_sensor.direction = digitalio.Direction.INPUT
-                return DtoMotion(motion_detection=motion_sensor.value)
+            self.__sensor = digitalio.DigitalInOut(pin=self.__get_pin(value=self._sensor_pin))
+            if self.__sensor is not None:
+                self.__sensor.direction = digitalio.Direction.INPUT
             else:
                 self.__logger.warning(msg="Failed to initialize Motion Detection sensor")
-                return None
         else:
             self.__logger.error(msg="The pin value for Motion Detection sensor was not initialized")
+
+    def get_sensor_data(self) -> Optional[DtoMotion]:
+        if self.__sensor is not None:
+            return DtoMotion(motion_detection=self.__sensor.value)
+        else:
+            self.__logger.warning(msg="Failed get data from Motion Detection sensor")
             return None
 
     def __get_pin(self, value: int):

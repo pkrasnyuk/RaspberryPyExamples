@@ -3,5 +3,6 @@ Adafruit_DHT
 click
 click-default-group
 dependency-injector
+gas_detection
 rpi_lcd
 pydantic

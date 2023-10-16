@@ -6,6 +6,7 @@ from dependency_injector import containers, providers
 from sensors.helpers.app_handlers import AppHandlers
 from sensors.services.accelerometer_sensor_service import AccelerometerSensorService
 from sensors.services.dht_sensor_service import DHTSensorService
+from sensors.services.gas_sensor_service import GazSensorService
 from sensors.services.lcd_service import LCDService
 from sensors.services.motion_detection_sensor_service import MotionDetectionSensorService
 
@@ -19,6 +20,7 @@ class Container(containers.DeclarativeContainer):
     handlers = providers.Singleton(AppHandlers)
 
     lcd_service = providers.Factory(LCDService)
-    dht_sensor_service = providers.Factory(DHTSensorService)
+    dht_sensor_service = providers.Factory(DHTSensorService, pin=config.DHT_PIN())
     accelerometer_sensor_service = providers.Factory(AccelerometerSensorService)
-    motion_detection_sensor_service = providers.Factory(MotionDetectionSensorService)
+    motion_detection_sensor_service = providers.Factory(MotionDetectionSensorService, pin=config.PIR_PIN())
+    gas_sensor_service = providers.Factory(GazSensorService, pin=config.MQ2_PIN())
