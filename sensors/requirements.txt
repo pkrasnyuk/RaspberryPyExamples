@@ -1,4 +1,7 @@
+adafruit-circuitpython-ADXL34x
 Adafruit_DHT
+click
+click-default-group
 dependency-injector
 rpi_lcd
 pydantic
