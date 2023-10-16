@@ -1,5 +1,6 @@
 import time
 from typing import Optional
+
 from sensors.data_processing.base_data_processing import BaseDataProcessing
 from sensors.dto.dto_entity import DtoEntity
 from sensors.dto.dto_lcd_messages import DtoLcdMessages
@@ -11,7 +12,7 @@ class DistanceDataProcessing(BaseDataProcessing):
     def __init__(self, lcd_service: LCDService, distance_sensor_service: DistanceSensorService):
         self.__lcd_service: LCDService = lcd_service
         self.__distance_sensor_service: DistanceSensorService = distance_sensor_service
-    
+
     def processing(self) -> None:
         self.__lcd_service.clear_messages()
 

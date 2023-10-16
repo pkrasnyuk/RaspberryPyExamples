@@ -1,9 +1,10 @@
 import logging
 from typing import Optional
-from sensors.dto.dto_distance import DtoDistance
-from sensors.services.base_sensor_service import BaseSensorService
 
 from gpiozero import DistanceSensor
+
+from sensors.dto.dto_distance import DtoDistance
+from sensors.services.base_sensor_service import BaseSensorService
 
 
 class DistanceSensorService(BaseSensorService):
@@ -11,7 +12,9 @@ class DistanceSensorService(BaseSensorService):
         super().__init__(pin=pin, sub_pin=sub_pin)
         self.__logger = logging.getLogger(f"{__name__}.{self.__class__.__name__}")
         if self._sensor_pin is not None and self._sensor_pin > 0:
-            self.__sensor = DistanceSensor(trigger=self._sensor_pin, echo=self._sensor_sub_pin, max_distance=1, threshold_distance=0.2)
+            self.__sensor = DistanceSensor(
+                trigger=self._sensor_pin, echo=self._sensor_sub_pin, max_distance=1, threshold_distance=0.2
+            )
         else:
             self.__logger.error(msg="The pin value for Distance Sensor was not initialized")
 
