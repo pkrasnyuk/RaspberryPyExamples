@@ -1,5 +1,6 @@
 import time
 from typing import Optional
+
 from sensors.data_processing.base_data_processing import BaseDataProcessing
 from sensors.dto.dto_lcd_messages import DtoLcdMessages
 from sensors.dto.dto_motion import DtoMotion
@@ -27,9 +28,7 @@ class MotionDetectionDataProcessing(BaseDataProcessing):
                     else:
                         if old_motion_detection_value is not None and old_motion_detection_value.motion_detection:
                             first_line_message = "Motion ended!"
-                    self.__lcd_service.send_messages(
-                        messages=DtoLcdMessages(first_line_message=first_line_message)
-                    )
+                    self.__lcd_service.send_messages(messages=DtoLcdMessages(first_line_message=first_line_message))
                 old_motion_detection_value = motion_detection_value
                 time.sleep(1)
         except KeyboardInterrupt:
