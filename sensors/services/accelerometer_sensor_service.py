@@ -10,8 +10,7 @@ from sensors.services.base_sensor_service import BaseSensorService
 
 
 class AccelerometerSensorService(BaseSensorService):
-    def __init__(self, pin: Optional[int] = None):
-        super().__init__(pin=pin)
+    def __init__(self):
         self.__logger = logging.getLogger(f"{__name__}.{self.__class__.__name__}")
         self.__i2c = busio.I2C(board.SCL, board.SDA)
         if self.__i2c is not None:
@@ -21,7 +20,7 @@ class AccelerometerSensorService(BaseSensorService):
                 self.__sensor.enable_motion_detection(threshold=18)
                 self.__sensor.enable_tap_detection(tap_count=1, threshold=20, duration=50, latency=20, window=255)
             else:
-                self.__logger.warning(msg="Failed to initialize Accelerometer sensor")
+                self.__logger.warning(msg="Failed to initialize Accelerometer Sensor")
         else:
             self.__logger.warning(msg="Failed to initialize I2C connection")
 

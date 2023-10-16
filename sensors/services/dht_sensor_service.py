@@ -8,7 +8,7 @@ from sensors.services.base_sensor_service import BaseSensorService
 
 
 class DHTSensorService(BaseSensorService):
-    def __init__(self, pin: Optional[int] = None):
+    def __init__(self, pin: int):
         super().__init__(pin=pin)
         self.__logger = logging.getLogger(f"{__name__}.{self.__class__.__name__}")
         self.__sensor = Adafruit_DHT.DHT11
@@ -23,8 +23,8 @@ class DHTSensorService(BaseSensorService):
             if humidity is not None and temperature is not None:
                 return DtoWeather(temperature=temperature, humidity=humidity)
             else:
-                self.__logger.warning(msg="Failed to retrieve data from DHT sensor")
+                self.__logger.warning(msg="Failed to retrieve data from DHT Sensor")
                 return None
         else:
-            self.__logger.error(msg="The pin value for DHT sensor was not initialized")
+            self.__logger.error(msg="The pin value for DHT Sensor was not initialized")
             return None

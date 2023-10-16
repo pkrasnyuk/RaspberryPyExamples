@@ -8,7 +8,7 @@ from sensors.services.base_sensor_service import BaseSensorService
 
 
 class GazSensorService(BaseSensorService):
-    def __init__(self, pin: Optional[int] = None):
+    def __init__(self, pin: int):
         super().__init__(pin=pin)
         self.__logger = logging.getLogger(f"{__name__}.{self.__class__.__name__}")
         if self._sensor_pin is not None and self._sensor_pin > 0:
@@ -16,9 +16,9 @@ class GazSensorService(BaseSensorService):
             if self.__sensor is not None:
                 self.__sensor.calibrate()
             else:
-                self.__logger.warning(msg="Failed to initialize Gas Detection sensor")
+                self.__logger.warning(msg="Failed to initialize Gas Detection Sensor")
         else:
-            self.__logger.error(msg="The pin value for Gas Detection sensor was not initialized")
+            self.__logger.error(msg="The pin value for Gas Detection Sensor was not initialized")
 
     def get_sensor_data(self) -> Optional[DtoGas]:
         if self.__sensor is not None:
@@ -33,5 +33,5 @@ class GazSensorService(BaseSensorService):
                 smoke=ppm[self.__sensor.SMOKE_GAS],
             )
         else:
-            self.__logger.warning(msg="Failed get data from Gas Detection sensor")
+            self.__logger.warning(msg="Failed get data from Gas Detection Sensor")
             return None

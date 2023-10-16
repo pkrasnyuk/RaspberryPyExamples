@@ -32,5 +32,7 @@
     },
     "DHT_PIN": 19,
     "PIR_PIN": 18,
-    "MQ2_PIN": 17
+    "MQ2_PIN": 17,
+    "HC_SR04_PIN": 15,
+    "HC_SR04_SUB_PIN": 16
 }

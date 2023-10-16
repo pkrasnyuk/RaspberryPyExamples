@@ -4,5 +4,6 @@ click
 click-default-group
 dependency-injector
 gas_detection
+gpiozero
 rpi_lcd
 pydantic

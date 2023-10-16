@@ -7,12 +7,14 @@ from dependency_injector.wiring import Provide, inject
 from sensors.containers import Container
 from sensors.data_processing.accelerometer_data_processing import AccelerometerDataProcessing
 from sensors.data_processing.base_data_processing import BaseDataProcessing
+from sensors.data_processing.distance_data_processing import DistanceDataProcessing
 from sensors.data_processing.gas_data_processing import GazDataProcessing
 from sensors.data_processing.motion_detection_data_processing import MotionDetectionDataProcessing
 from sensors.data_processing.wheather_data_processing import WheatherDataProcessing
 from sensors.helpers.app_handlers import AppHandlers
 from sensors.services.accelerometer_sensor_service import AccelerometerSensorService
 from sensors.services.dht_sensor_service import DHTSensorService
+from sensors.services.distance_sensor_service import DistanceSensorService
 from sensors.services.gas_sensor_service import GazSensorService
 from sensors.services.lcd_service import LCDService
 from sensors.services.motion_detection_sensor_service import MotionDetectionSensorService
@@ -67,6 +69,18 @@ def gaz_detection_task(
     gaz_data_processing.processing()
 
 
+@click.command(name="distance")
+@inject
+def distance_task(
+    lcd_service: LCDService = Provide[Container.lcd_service],
+    distance_sensor_service: DistanceSensorService = Provide[Container.distance_sensor_service],
+):
+    distance_data_processing: BaseDataProcessing = DistanceDataProcessing(
+        lcd_service=lcd_service, distance_sensor_service=distance_sensor_service
+    )
+    distance_data_processing.processing()
+
+
 @click.command(name="default")
 def default_task():
     pass
@@ -83,6 +97,7 @@ main.add_command(wheather_task)
 main.add_command(accelerometry_task)
 main.add_command(motion_detection_task)
 main.add_command(gaz_detection_task)
+main.add_command(distance_task)
 main.add_command(default_task)
 
 
