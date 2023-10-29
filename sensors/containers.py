@@ -8,6 +8,7 @@ from sensors.services.accelerometer_sensor_service import AccelerometerSensorSer
 from sensors.services.dht_sensor_service import DHTSensorService
 from sensors.services.distance_sensor_service import DistanceSensorService
 from sensors.services.gas_sensor_service import GazSensorService
+from sensors.services.influx_db_service import InfluxDbService
 from sensors.services.lcd_service import LCDService
 from sensors.services.motion_detection_sensor_service import MotionDetectionSensorService
 
@@ -19,6 +20,11 @@ class Container(containers.DeclarativeContainer):
     logging = providers.Resource(logging.config.dictConfig, config=config.log())
 
     handlers = providers.Singleton(AppHandlers)
+
+    influxdb_config = config.influxdb()
+    influx_db_service = providers.Factory(
+        InfluxDbService, url=influxdb_config["url"], token=influxdb_config["token"], org=influxdb_config["org"]
+    )
 
     lcd_service = providers.Factory(LCDService)
     dht_sensor_service = providers.Factory(DHTSensorService, pin=config.DHT_PIN())

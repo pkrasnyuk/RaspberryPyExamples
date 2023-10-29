@@ -6,4 +6,4 @@ from sensors.dto.dto_entity import DtoEntity
 
 
 class DtoDistance(DtoEntity):
-    distance: Optional[float] = Field(default=None)
+    distance: Optional[float] = Field(default=None, serialization_alias="distance")

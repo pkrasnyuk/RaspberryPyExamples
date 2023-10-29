@@ -10,28 +10,34 @@ from sensors.data_processing.base_data_processing import BaseDataProcessing
 from sensors.data_processing.distance_data_processing import DistanceDataProcessing
 from sensors.data_processing.gas_data_processing import GazDataProcessing
 from sensors.data_processing.motion_detection_data_processing import MotionDetectionDataProcessing
-from sensors.data_processing.wheather_data_processing import WheatherDataProcessing
+from sensors.data_processing.weather_data_processing import WeatherDataProcessing
 from sensors.helpers.app_handlers import AppHandlers
 from sensors.services.accelerometer_sensor_service import AccelerometerSensorService
 from sensors.services.dht_sensor_service import DHTSensorService
 from sensors.services.distance_sensor_service import DistanceSensorService
 from sensors.services.gas_sensor_service import GazSensorService
+from sensors.services.influx_db_service import InfluxDbService
 from sensors.services.lcd_service import LCDService
 from sensors.services.motion_detection_sensor_service import MotionDetectionSensorService
 
 log = logging.getLogger(f"{__name__}")
 
 
-@click.command(name="wheather")
+@click.command(name="weather")
 @inject
-def wheather_task(
+def weather_task(
     lcd_service: LCDService = Provide[Container.lcd_service],
     dht_sensor_service: DHTSensorService = Provide[Container.dht_sensor_service],
+    influx_db_service: InfluxDbService = Provide[Container.influx_db_service],
+    weather_bucket: str = Container.influxdb_config["dht_bucket"],
 ):
-    wheather_data_processing: BaseDataProcessing = WheatherDataProcessing(
-        lcd_service=lcd_service, dht_sensor_service=dht_sensor_service
+    weather_data_processing: BaseDataProcessing = WeatherDataProcessing(
+        lcd_service=lcd_service,
+        dht_sensor_service=dht_sensor_service,
+        influx_db_service=influx_db_service,
+        weather_bucket=weather_bucket,
     )
-    wheather_data_processing.processing()
+    weather_data_processing.processing()
 
 
 @click.command(name="accelerometry")
@@ -93,7 +99,7 @@ def main(handlers: AppHandlers = Provide[Container.handlers]):
     pass
 
 
-main.add_command(wheather_task)
+main.add_command(weather_task)
 main.add_command(accelerometry_task)
 main.add_command(motion_detection_task)
 main.add_command(gaz_detection_task)
