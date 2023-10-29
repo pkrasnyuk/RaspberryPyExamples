@@ -1,9 +1,10 @@
 import logging
-from sensors.dto.dto_entity import DtoEntity
 
-from sensors.services.base_service import BaseService
 from influxdb_client import InfluxDBClient, Point
 from influxdb_client.client.write_api import SYNCHRONOUS
+
+from sensors.dto.dto_entity import DtoEntity
+from sensors.services.base_service import BaseService
 
 
 class InfluxDbService(BaseService):
@@ -19,7 +20,7 @@ class InfluxDbService(BaseService):
             bucket = self.__buckets_api.find_bucket_by_name(bucket_name=bucket_name)
             if bucket is None:
                 bucket = self.__buckets_api.create_bucket(bucket_name=bucket_name, org=self.__org)
-            
+
             if bucket is not None and model is not None:
                 point = Point(measurement_name=measurement_name).tag(key="location", value="localhost")
                 point._fields = model.model_dump()

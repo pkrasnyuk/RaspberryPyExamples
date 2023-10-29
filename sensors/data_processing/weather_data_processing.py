@@ -30,9 +30,7 @@ class WeatherDataProcessing(BaseDataProcessing):
                 weather_data: Optional[DtoWeather] = self.__dht_sensor_service.get_sensor_data()
                 if weather_data is not None:
                     first_line_message: Optional[str] = (
-                        f"Temp:      {weather_data.temperature:0.1f}C"
-                        if weather_data.temperature is not None
-                        else None
+                        f"Temp:      {weather_data.temperature:0.1f}C" if weather_data.temperature is not None else None
                     )
                     second_line_message: Optional[str] = (
                         f"Humidity:  {weather_data.humidity:0.1f}%" if weather_data.humidity is not None else None
