@@ -3,6 +3,7 @@ from typing import Callable, List
 
 from apscheduler.schedulers.background import BackgroundScheduler
 from apscheduler.triggers.cron import CronTrigger
+
 from sensors.services.scheduler_job_wrapper import SchedulerJobWrapper
 
 
