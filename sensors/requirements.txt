@@ -1,5 +1,6 @@
 adafruit-circuitpython-ADXL34x
 Adafruit_DHT
+apscheduler
 click
 click-default-group
 dependency-injector

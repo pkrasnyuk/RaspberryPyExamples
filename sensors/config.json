@@ -36,9 +36,31 @@
         "org": "RaspberryPi",
         "dht_bucket": "weather_bucket"
     },
-    "DHT_PIN": 19,
-    "PIR_PIN": 18,
-    "MQ2_PIN": 17,
-    "HC_SR04_PIN": 15,
-    "HC_SR04_SUB_PIN": 16
+    "services": [
+        {
+            "name": "weather",
+            "pin": 19,
+            "cron": "* * * * *"
+        },
+        {
+            "name": "accelerometry",
+            "cron": ""
+        },
+        {
+            "name": "motion_detection",
+            "pin": 18,
+            "cron": ""
+        },
+        {
+            "name": "gaz_detection",
+            "pin": 17,
+            "cron": ""
+        },
+        {
+            "name": "distance",
+            "pin": 15,
+            "sub_pin": 16,
+            "cron": ""
+        }
+    ]
 }

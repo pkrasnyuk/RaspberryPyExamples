@@ -1,4 +1,3 @@
-import time
 from typing import Optional
 
 from sensors.data_processing.base_data_processing import BaseDataProcessing
@@ -16,18 +15,11 @@ class DistanceDataProcessing(BaseDataProcessing):
     def processing(self) -> None:
         self.__lcd_service.clear_messages()
 
-        try:
-            while True:
-                distance_value: Optional[DtoEntity] = self.__distance_sensor_service.get_sensor_data()
-                if distance_value is not None:
-                    first_line_message: Optional[str] = f"Dist: {distance_value.distance:0.4f}m"
-                    self.__lcd_service.send_messages(
-                        messages=DtoLcdMessages(
-                            first_line_message=first_line_message,
-                        )
-                    )
-                time.sleep(10)
-        except KeyboardInterrupt:
-            pass
-        finally:
-            self.__lcd_service.clear_messages()
+        distance_value: Optional[DtoEntity] = self.__distance_sensor_service.get_sensor_data()
+        if distance_value is not None:
+            first_line_message: Optional[str] = f"Dist: {distance_value.distance:0.4f}m"
+            self.__lcd_service.send_messages(
+                messages=DtoLcdMessages(
+                    first_line_message=first_line_message,
+                )
+            )

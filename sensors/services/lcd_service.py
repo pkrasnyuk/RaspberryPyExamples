@@ -1,5 +1,4 @@
 import logging
-from signal import SIGINT, signal
 from typing import Optional
 
 from rpi_lcd import LCD
@@ -13,12 +12,7 @@ class LCDService(BaseService):
         self.__logger = logging.getLogger(f"{__name__}.{self.__class__.__name__}")
         self.__lcd = LCD()
 
-    def __handler(self, signal_received, frame) -> None:
-        exit(0)
-
     def send_messages(self, messages: Optional[DtoLcdMessages]) -> None:
-        signal(SIGINT, self.__handler)
-
         try:
             if messages is not None:
                 if messages.first_line_message is not None:

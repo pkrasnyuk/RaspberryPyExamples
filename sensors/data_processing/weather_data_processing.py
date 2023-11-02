@@ -1,4 +1,3 @@
-import time
 from typing import Optional
 
 from sensors.data_processing.base_data_processing import BaseDataProcessing
@@ -25,26 +24,17 @@ class WeatherDataProcessing(BaseDataProcessing):
     def processing(self) -> None:
         self.__lcd_service.clear_messages()
 
-        try:
-            while True:
-                weather_data: Optional[DtoWeather] = self.__dht_sensor_service.get_sensor_data()
-                if weather_data is not None:
-                    first_line_message: Optional[str] = (
-                        f"Temp:      {weather_data.temperature:0.1f}C" if weather_data.temperature is not None else None
-                    )
-                    second_line_message: Optional[str] = (
-                        f"Humidity:  {weather_data.humidity:0.1f}%" if weather_data.humidity is not None else None
-                    )
-                    self.__lcd_service.send_messages(
-                        messages=DtoLcdMessages(
-                            first_line_message=first_line_message, second_line_message=second_line_message
-                        )
-                    )
-                    self.__influx_db_service.save_point(
-                        bucket_name=self.__weather_bucket, measurement_name="weather", model=weather_data
-                    )
-                time.sleep(10)
-        except KeyboardInterrupt:
-            pass
-        finally:
-            self.__lcd_service.clear_messages()
+        weather_data: Optional[DtoWeather] = self.__dht_sensor_service.get_sensor_data()
+        if weather_data is not None:
+            first_line_message: Optional[str] = (
+                f"Temp:      {weather_data.temperature:0.1f}C" if weather_data.temperature is not None else None
+            )
+            second_line_message: Optional[str] = (
+                f"Humidity:  {weather_data.humidity:0.1f}%" if weather_data.humidity is not None else None
+            )
+            self.__lcd_service.send_messages(
+                messages=DtoLcdMessages(first_line_message=first_line_message, second_line_message=second_line_message)
+            )
+            self.__influx_db_service.save_point(
+                bucket_name=self.__weather_bucket, measurement_name="weather", model=weather_data
+            )
