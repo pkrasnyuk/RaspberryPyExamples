@@ -27,8 +27,7 @@ def services_task(
 
 @click.command(name="default")
 def default_task():
-    services_task()
-    # pass
+    pass
 
 
 @click.group(cls=DefaultGroup, default="default", default_if_no_args=True)
