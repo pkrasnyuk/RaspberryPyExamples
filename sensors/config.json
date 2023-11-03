@@ -39,7 +39,12 @@
     "services": [
         {
             "name": "weather",
-            "pin": 19,
+            "sensors": [
+                {
+                    "name": "DHT",
+                    "pin": 19
+                }
+            ],
             "cron": "* * * * *"
         },
         {
@@ -48,18 +53,36 @@
         },
         {
             "name": "motion_detection",
-            "pin": 18,
+            "sensors": [
+                {
+                    "name": "PIR",
+                    "pin": 18
+                }
+            ],
             "cron": ""
         },
         {
             "name": "gaz_detection",
-            "pin": 17,
+            "sensors": [
+                {
+                    "name": "MQ2",
+                    "pin": 17
+                }
+            ],
             "cron": ""
         },
         {
             "name": "distance",
-            "pin": 15,
-            "sub_pin": 16,
+            "sensors": [
+                {
+                    "name": "HC_SR04_F",
+                    "pin": 15
+                },
+                {
+                    "name": "HC_SR04_S",
+                    "pin": 16
+                }
+            ],
             "cron": ""
         }
     ]

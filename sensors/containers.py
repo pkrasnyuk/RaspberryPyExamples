@@ -1,6 +1,6 @@
 import logging.config
 import os
-from typing import Optional
+from typing import List, Optional
 
 from dependency_injector import containers, providers
 
@@ -10,6 +10,7 @@ from sensors.data_processing.gas_data_processing import GazDataProcessing
 from sensors.data_processing.motion_detection_data_processing import MotionDetectionDataProcessing
 from sensors.data_processing.weather_data_processing import WeatherDataProcessing
 from sensors.dto.dto_scheduler_job import DtoSchedulerJob
+from sensors.dto.dto_sensor import DtoSensor
 from sensors.helpers.app_handlers import AppHandlers
 from sensors.services.accelerometer_sensor_service import AccelerometerSensorService
 from sensors.services.dht_sensor_service import DHTSensorService
@@ -44,35 +45,44 @@ class Container(containers.DeclarativeContainer):
     services = config.services()
     if services is not None and len(services) > 0:
         for service in services:
+            service_sensors: Optional[List[DtoSensor]] = []
+            if "sensors" in service and len(service["sensors"]) > 0:
+                service_sensors = []
+                for sensor in service["sensors"]:
+                    service_sensors.append(DtoSensor(name=sensor["name"], pin=sensor["pin"]))
+            else:
+                service_sensors = None
             scheduler_job = DtoSchedulerJob(
-                name=service["name"] if "name" in service else "",
-                pin=service["pin"] if "pin" in service else None,
-                sub_pin=service["sub_pin"] if "sub_pin" in service else None,
+                name=service["name"] if "name" in service else None,
+                sensors=service_sensors,
                 cron=service["cron"] if "cron" in service and service["cron"] != "" else None,
             )
             cron: Optional[str] = scheduler_job.get_crontab()
             if cron is not None:
-                pin: Optional[int] = scheduler_job.get_pin()
-                sub_pin: Optional[int] = scheduler_job.get_sub_pin()
-                if scheduler_job.name == "weather" and pin is not None:
-                    dht_sensor_service = providers.Factory(
-                        DHTSensorService,
-                        pin=pin,
-                    )
-                    weather_data_processing = providers.Factory(
-                        WeatherDataProcessing,
-                        lcd_service=lcd_service,
-                        dht_sensor_service=dht_sensor_service,
-                        influx_db_service=influx_db_service,
-                        weather_bucket=influxdb_config["dht_bucket"],
-                    )
-                    weather_wrapper = providers.Factory(
-                        SchedulerJobWrapper,
-                        job=scheduler_job,
-                        data_processing=weather_data_processing,
-                    )
-                    scheduler_job_wrapper_providers_list.add_args(weather_wrapper)
-                if scheduler_job.name == "accelerometry" and pin is not None:
+                sensors: Optional[List[DtoSensor]] = scheduler_job.get_sensors()
+                if scheduler_job.get_name() == "weather" and sensors is not None and len(sensors) > 0:
+                    dht_sensor: Optional[DtoSensor] = next((x for x in sensors if x.get_name() == "DHT"), None)
+                    if dht_sensor is not None:
+                        dht_sensor_pin: Optional[int] = dht_sensor.get_pin()
+                        if dht_sensor_pin is not None:
+                            dht_sensor_service = providers.Factory(
+                                DHTSensorService,
+                                pin=dht_sensor_pin,
+                            )
+                            weather_data_processing = providers.Factory(
+                                WeatherDataProcessing,
+                                lcd_service=lcd_service,
+                                dht_sensor_service=dht_sensor_service,
+                                influx_db_service=influx_db_service,
+                                weather_bucket=influxdb_config["dht_bucket"],
+                            )
+                            weather_wrapper = providers.Factory(
+                                SchedulerJobWrapper,
+                                job=scheduler_job,
+                                data_processing=weather_data_processing,
+                            )
+                            scheduler_job_wrapper_providers_list.add_args(weather_wrapper)
+                if scheduler_job.get_name() == "accelerometry":
                     accelerometer_sensor_service = providers.Factory(AccelerometerSensorService)
                     accelerometer_data_processing = providers.Factory(
                         AccelerometerDataProcessing,
@@ -84,54 +94,72 @@ class Container(containers.DeclarativeContainer):
                         data_processing=accelerometer_data_processing,
                     )
                     scheduler_job_wrapper_providers_list.add_args(accelerometer_wrapper)
-                if scheduler_job.name == "motion_detection" and pin is not None:
-                    motion_detection_sensor_service = providers.Factory(
-                        MotionDetectionSensorService,
-                        pin=pin,
+                if scheduler_job.get_name() == "motion_detection" and sensors is not None and len(sensors) > 0:
+                    pir_sensor: Optional[DtoSensor] = next((x for x in sensors if x.get_name() == "PIR"), None)
+                    if pir_sensor is not None:
+                        pir_sensor_pin: Optional[int] = pir_sensor.get_pin()
+                        if pir_sensor_pin is not None:
+                            motion_detection_sensor_service = providers.Factory(
+                                MotionDetectionSensorService,
+                                pin=pir_sensor_pin,
+                            )
+                            motion_detection_data_processing = providers.Factory(
+                                MotionDetectionDataProcessing,
+                                lcd_service=lcd_service,
+                                motion_detection_sensor_service=motion_detection_sensor_service,
+                            )
+                            motion_detection_wrapper = providers.Factory(
+                                SchedulerJobWrapper,
+                                job=scheduler_job,
+                                data_processing=motion_detection_data_processing,
+                            )
+                            scheduler_job_wrapper_providers_list.add_args(motion_detection_wrapper)
+                if scheduler_job.get_name() == "gaz_detection" and sensors is not None and len(sensors) > 0:
+                    mq2_sensor: Optional[DtoSensor] = next((x for x in sensors if x.get_name() == "MQ2"), None)
+                    if mq2_sensor is not None:
+                        mq2_sensor_pin: Optional[int] = mq2_sensor.get_pin()
+                        if mq2_sensor_pin is not None:
+                            gas_sensor_service = providers.Factory(
+                                GazSensorService,
+                                pin=mq2_sensor_pin,
+                            )
+                            gaz_detection_data_processing = providers.Factory(
+                                GazDataProcessing,
+                                lcd_service=lcd_service,
+                                gas_sensor_service=gas_sensor_service,
+                            )
+                            gaz_detection_wrapper = providers.Factory(
+                                SchedulerJobWrapper,
+                                job=scheduler_job,
+                                data_processing=gaz_detection_data_processing,
+                            )
+                            scheduler_job_wrapper_providers_list.add_args(gaz_detection_wrapper)
+                if scheduler_job.get_name() == "distance" and sensors is not None and len(sensors) > 1:
+                    hc_sr04_f_sensor: Optional[DtoSensor] = next(
+                        (x for x in sensors if x.get_name() == "HC_SR04_F"), None
                     )
-                    motion_detection_data_processing = providers.Factory(
-                        MotionDetectionDataProcessing,
-                        lcd_service=lcd_service,
-                        motion_detection_sensor_service=motion_detection_sensor_service,
+                    hc_sr04_s_sensor: Optional[DtoSensor] = next(
+                        (x for x in sensors if x.get_name() == "HC_SR04_S"), None
                     )
-                    motion_detection_wrapper = providers.Factory(
-                        SchedulerJobWrapper,
-                        job=scheduler_job,
-                        data_processing=motion_detection_data_processing,
-                    )
-                    scheduler_job_wrapper_providers_list.add_args(motion_detection_wrapper)
-                if scheduler_job.name == "gaz_detection" and pin is not None:
-                    gas_sensor_service = providers.Factory(
-                        GazSensorService,
-                        pin=pin,
-                    )
-                    gaz_detection_data_processing = providers.Factory(
-                        GazDataProcessing,
-                        lcd_service=lcd_service,
-                        gas_sensor_service=gas_sensor_service,
-                    )
-                    gaz_detection_wrapper = providers.Factory(
-                        SchedulerJobWrapper,
-                        job=scheduler_job,
-                        data_processing=gaz_detection_data_processing,
-                    )
-                    scheduler_job_wrapper_providers_list.add_args(gaz_detection_wrapper)
-                if scheduler_job.name == "distance" and pin is not None:
-                    distance_sensor_service = providers.Factory(
-                        DistanceSensorService,
-                        pin=pin,
-                        sub_pin=sub_pin,
-                    )
-                    distance_data_processing = providers.Factory(
-                        DistanceDataProcessing,
-                        lcd_service=lcd_service,
-                        distance_sensor_service=distance_sensor_service,
-                    )
-                    distance_wrapper = providers.Factory(
-                        SchedulerJobWrapper,
-                        job=scheduler_job,
-                        data_processing=distance_data_processing,
-                    )
-                    scheduler_job_wrapper_providers_list.add_args(distance_wrapper)
+                    if hc_sr04_f_sensor is not None and hc_sr04_s_sensor is not None:
+                        hc_sr04_f_sensor_pin_f: Optional[int] = hc_sr04_f_sensor.get_pin()
+                        hc_sr04_s_sensor_pin_s: Optional[int] = hc_sr04_s_sensor.get_pin()
+                        if hc_sr04_f_sensor_pin_f is not None and hc_sr04_s_sensor_pin_s is not None:
+                            distance_sensor_service = providers.Factory(
+                                DistanceSensorService,
+                                pin=hc_sr04_f_sensor_pin_f,
+                                sub_pin=hc_sr04_s_sensor_pin_s,
+                            )
+                            distance_data_processing = providers.Factory(
+                                DistanceDataProcessing,
+                                lcd_service=lcd_service,
+                                distance_sensor_service=distance_sensor_service,
+                            )
+                            distance_wrapper = providers.Factory(
+                                SchedulerJobWrapper,
+                                job=scheduler_job,
+                                data_processing=distance_data_processing,
+                            )
+                            scheduler_job_wrapper_providers_list.add_args(distance_wrapper)
 
     scheduler_service = providers.Factory(SchedulerService, scheduler_job_wrappers=scheduler_job_wrapper_providers_list)
