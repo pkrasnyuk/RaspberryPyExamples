@@ -1,10 +1,11 @@
 import logging
 import time
 
-from sensors.services.base_service import BaseService
 from paho.mqtt import client as mqtt_client
+from paho.mqtt.packettypes import PacketTypes
 from paho.mqtt.properties import Properties
-from paho.mqtt.packettypes import PacketTypes 
+
+from sensors.services.base_service import BaseService
 
 
 class MQTTService(BaseService):
@@ -72,11 +73,11 @@ class MQTTService(BaseService):
                 connect_properties = Properties(PacketTypes.CONNECT)
                 connect_properties.SessionExpiryInterval = self.__session_expiry_interval
                 self.__client.connect(
-                    host=self.__broker, 
-                    port=self.__port, 
-                    clean_start=mqtt_client.MQTT_CLEAN_START_FIRST_ONLY, 
+                    host=self.__broker,
+                    port=self.__port,
+                    clean_start=mqtt_client.MQTT_CLEAN_START_FIRST_ONLY,
                     keepalive=self.__mqtt_keepalive,
-                    properties=connect_properties
+                    properties=connect_properties,
                 )
                 self.__client.loop_start()
                 self.__logger.info("A MQTT Service is started ...")
@@ -95,14 +96,15 @@ class MQTTService(BaseService):
             except Exception as ex:
                 self.__logger.error(msg="Failed to stop MQTT Service ...", exc_info=ex, stack_info=True)
 
-    
     def send_message(self, message: str) -> None:
         if self.__client is not None:
             try:
                 if self.__client.is_connected():
                     publish_properties = Properties(PacketTypes.PUBLISH)
                     publish_properties.MessageExpiryInterval = self.__expiry_interval
-                    result = self.__client.publish(topic=self.__topic, payload=message, qos=self.__mqtt_qos, properties=publish_properties)
+                    result = self.__client.publish(
+                        topic=self.__topic, payload=message, qos=self.__mqtt_qos, properties=publish_properties
+                    )
                     result.wait_for_publish()
                     status = result[0]
                     if status == 0:
@@ -111,4 +113,3 @@ class MQTTService(BaseService):
                         self.__logger.info(f"Failed to send message '{message}' to topic '{self.__topic}'")
             except Exception as ex:
                 self.__logger.error(msg="Failed to send message in MQTT Service ...", exc_info=ex, stack_info=True)
-            
