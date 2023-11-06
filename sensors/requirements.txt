@@ -8,4 +8,5 @@ gas_detection
 gpiozero
 influxdb-client
 rpi_lcd
+paho-mqtt
 pydantic

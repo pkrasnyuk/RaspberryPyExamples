@@ -8,6 +8,7 @@ from dependency_injector.wiring import Provide, inject
 from sensors.containers import Container
 from sensors.helpers.app_handlers import AppHandlers
 from sensors.services.lcd_service import LCDService
+from sensors.services.mqtt_service import MQTTService
 from sensors.services.scheduler_service import SchedulerService
 
 log = logging.getLogger(f"{__name__}")
@@ -25,6 +26,16 @@ def services_task(
         pass
 
 
+@click.command(name="mqtt_example")
+@inject
+def mqtt_example_task(
+    mqtt_service: MQTTService = Provide[Container.mqtt_service],
+):
+    mqtt_service.run()
+    mqtt_service.send_message(message="test_message_909")
+    mqtt_service.stop()
+
+
 @click.command(name="default")
 def default_task():
     pass
@@ -38,6 +49,7 @@ def main(handlers: AppHandlers = Provide[Container.handlers]):
 
 
 main.add_command(services_task)
+main.add_command(mqtt_example_task)
 main.add_command(default_task)
 
 

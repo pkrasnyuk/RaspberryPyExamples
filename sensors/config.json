@@ -36,6 +36,14 @@
         "org": "RaspberryPi",
         "dht_bucket": "weather_bucket"
     },
+    "mqtt_broker" : {
+        "broker": "broker.emqx.io",
+        "port": 1883,
+        "topic": "raspberry_py/mqtt",
+        "user_name": "emqx",
+        "password": "public",
+        "certificate_authority": "./certs/broker.emqx.io-ca.crt"
+    },
     "services": [
         {
             "name": "weather",

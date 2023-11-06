@@ -1,5 +1,6 @@
 import logging.config
 import os
+import uuid
 from typing import List, Optional
 
 from dependency_injector import containers, providers
@@ -19,6 +20,7 @@ from sensors.services.gas_sensor_service import GazSensorService
 from sensors.services.influx_db_service import InfluxDbService
 from sensors.services.lcd_service import LCDService
 from sensors.services.motion_detection_sensor_service import MotionDetectionSensorService
+from sensors.services.mqtt_service import MQTTService
 from sensors.services.scheduler_job_wrapper import SchedulerJobWrapper
 from sensors.services.scheduler_service import SchedulerService
 
@@ -37,6 +39,17 @@ class Container(containers.DeclarativeContainer):
         url=influxdb_config["url"],
         token=influxdb_config["token"],
         org=influxdb_config["org"],
+    )
+
+    mqtt_broker_config = config.mqtt_broker()
+    mqtt_service = providers.Factory(
+        MQTTService,
+        broker=mqtt_broker_config["broker"],
+        port=mqtt_broker_config["port"],
+        topic=mqtt_broker_config["topic"],
+        client_id=f"raspberry_py_{str(uuid.uuid4())}",
+        user_name=mqtt_broker_config["user_name"],
+        password=mqtt_broker_config["password"],
     )
 
     lcd_service = providers.Factory(LCDService)
