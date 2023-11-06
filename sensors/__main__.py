@@ -32,7 +32,7 @@ def mqtt_example_task(
     mqtt_service: MQTTService = Provide[Container.mqtt_service],
 ):
     mqtt_service.run()
-    mqtt_service.send_message(message="test_message_909")
+    mqtt_service.send_message(message="test_message_303")
     mqtt_service.stop()
 
 
