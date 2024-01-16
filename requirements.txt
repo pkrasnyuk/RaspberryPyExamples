@@ -1,5 +1,5 @@
 adafruit-circuitpython-ADXL34x
-Adafruit-DHT
+adafruit-circuitpython-dht
 apscheduler
 click
 click-default-group

@@ -1,10 +1,6 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 
 
 class DtoEntity(BaseModel):
+    model_config = ConfigDict(populate_by_name=True, arbitrary_types_allowed=True, from_attributes=True)
     pass
-
-    class Config:
-        populate_by_name = True
-        arbitrary_types_allowed = True
-        require_by_default = False
