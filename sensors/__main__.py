@@ -1,3 +1,4 @@
+import json
 import logging
 from signal import SIGINT, signal
 
@@ -32,7 +33,7 @@ def mqtt_example_task(
     mqtt_service: MQTTService = Provide[Container.mqtt_service],
 ):
     mqtt_service.run()
-    mqtt_service.send_message(message="test_message_303")
+    mqtt_service.send_message(message=json.dumps({"info": "test_message_303"}))
     mqtt_service.stop()
 
 
