@@ -52,8 +52,6 @@ click==8.1.8
     #   click-default-group
 click-default-group==1.2.4
     # via -r requirements.in
-colorama==0.4.6
-    # via click
 colorzero==2.0
     # via gpiozero
 dependency-injector==4.44.0
@@ -104,6 +102,8 @@ six==1.17.0
     #   python-dateutil
 smbus==1.1.post2
     # via rpi-lcd
+sysv-ipc==1.1.0
+    # via adafruit-blinka
 typing-extensions==4.12.2
     # via
     #   adafruit-circuitpython-ads1x15
@@ -111,11 +111,9 @@ typing-extensions==4.12.2
     #   pydantic
     #   pydantic-core
     #   reactivex
-tzdata==2024.2
-    # via tzlocal
 tzlocal==5.2
     # via apscheduler
-urllib3==2.3.0
+urllib3==2.5.0
     # via influxdb-client
 virtualenv==20.28.0
     # via pre-commit
