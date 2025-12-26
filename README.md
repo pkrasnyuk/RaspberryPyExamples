@@ -3,5 +3,5 @@
 [![CodeQL](https://github.com/pkrasnyuk/RaspberryPyExamples/actions/workflows/codeql.yml/badge.svg)](https://github.com/pkrasnyuk/RaspberryPyExamples/actions/workflows/codeql.yml)
 [![Pylint](https://github.com/pkrasnyuk/RaspberryPyExamples/actions/workflows/pylint.yml/badge.svg)](https://github.com/pkrasnyuk/RaspberryPyExamples/actions/workflows/pylint.yml)
 
-The project with some examples of using Python for Raspberry Pi 
+The project with some examples of using Python for Raspberry Pi
 (it is a template project by using dependency injection, scheduling service, InfluxDB and MQTT IoT Messaging support, and TDD and DDD paradigms)
